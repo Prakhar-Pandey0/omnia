@@ -9,8 +9,12 @@ on:
       - pub/telemetry
       - pub/q2_upgrade
 
-  pull_request:
+  pull_request_target:
   workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   gitleaks:
@@ -31,3 +35,4 @@ jobs:
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
           GITLEAKS_ENABLE_SUMMARY: true
           GITLEAKS_ENABLE_COMMENTS: true
+          GITLEAKS_ARGS: "--log-opts=--all"
