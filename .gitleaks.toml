@@ -1,18 +1,18 @@
 title = "Gitleaks config for Omnia"
 
 [allowlist]
-  description = "Allowlist for known false positives in Ansible/infra repos"
+  description = "Ignore known false positives for infra repos"
 
   paths = [
     '''(^|/)examples/''',
     '''(^|/)docs/''',
-    '''(^|/)molecule/''',
-    '''(^|/)\.git/''',
   ]
 
   regexTarget = "match"
   regexes = [
     '''example[_-]?(password|secret|token|key)''',
+    '''dummy[_-]?(password|secret|token|key)''',
+    '''test[_-]?(password|secret|token|key)''',
     '''CHANGEME''',
-    '''password:\s*"?\{\{.*\}\}"?''',
+    '''password:\s*"?\{\{.*\}\}"?'''
   ]
