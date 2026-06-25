@@ -1296,8 +1296,8 @@ post_setup_config() {
     echo -e "${BLUE} Moving input files from /omnia dir to project_default folder.${NC}"
     podman exec -u root omnia_core bash -c "
     mkdir -p /opt/omnia/input/project_default
-    cp -r /omnia/input/* /opt/omnia/input/project_default
-    rm -rf /omnia/input
+    cp -r /omnia/src/input/* /opt/omnia/input/project_default
+    rm -rf /omnia/src/input
     rm -rf /omnia/omnia.sh"
 }
 
@@ -1359,7 +1359,7 @@ init_ssh_config() {
 
 remove_container_omnia_sh() {
     podman exec -u root omnia_core bash -c 'if [ -f /omnia/omnia.sh ]; then rm -f /omnia/omnia.sh; fi' >/dev/null 2>&1 || true
-    podman exec -u root omnia_core bash -c 'if [ -d /omnia/input ]; then rm -rf /omnia/input; fi' >/dev/null 2>&1 || true
+    podman exec -u root omnia_core bash -c 'if [ -d /omnia/src/input ]; then rm -rf /omnia/src/input; fi' >/dev/null 2>&1 || true
 }
 
 start_container_session() {
