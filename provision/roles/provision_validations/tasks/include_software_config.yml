@@ -93,4 +93,4 @@
 
 - name: Set NVIDIA driver version from omnia_config
   ansible.builtin.set_fact:
-    nvidia_driver_version: "{{ nvidia_driver_version | default('580.159.04') }}"
+    nvidia_driver_version: "{{ slurm_cluster[0].nvidia_driver_version | default('580.159.04') }}"

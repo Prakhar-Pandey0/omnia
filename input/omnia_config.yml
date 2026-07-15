@@ -137,21 +137,20 @@
 #   cgroup: /opt/omnia/input/project_default/cgroup.conf
 #   slurmdbd: /opt/omnia/input/project_default/slurmdbd.conf
 
-slurm_cluster:
-  - cluster_name: slurm_cluster
-    nfs_storage_name: nfs_slurm
-    vast_storage_name: vast_storage
-
-# ----------------------------GPU CONFIGURATION--------------------------------
+# nvidia_driver_version
 # NVIDIA GPU driver configuration for compute nodes
-# nvidia_driver_version: NVIDIA driver version to install on GPU nodes
+# This driver version is used by install_cuda_driver.sh on slurm nodes
 # Default: "580.159.04" if not specified
 # Common versions:
 #   - "580.159.04" for H100 GPUs
 #   - "550.90.07" for A100 GPUs
 #   - "535.129.02" for V100 GPUs
-# This driver version is used by install_cuda_driver.sh on slurm nodes
-nvidia_driver_version: "580.159.04"
+
+slurm_cluster:
+  - cluster_name: slurm_cluster
+    nvidia_driver_version: "580.159.04"
+    nfs_storage_name: nfs_slurm
+    vast_storage_name: vast_storage
 
 # ----------------------------SERVICE K8S------------------------------------------------------
 # For service k8s cluster below parameters are required,(List)

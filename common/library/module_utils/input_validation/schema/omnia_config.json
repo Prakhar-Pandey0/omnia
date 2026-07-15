@@ -72,6 +72,10 @@
             },
             "additionalProperties": false
           },
+          "nvidia_driver_version": {
+            "type": "string",
+            "description": "NVIDIA driver version to install on GPU nodes"
+          },
           "config_sources": {
             "type": "object",
             "description": "Config can be a file path or inline mapping",
