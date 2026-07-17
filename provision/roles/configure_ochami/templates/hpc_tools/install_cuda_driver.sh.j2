@@ -3,7 +3,16 @@
 # Never touches NFS lock artifacts. Never touches /hpc_tools/cuda contents.
 set -euo pipefail
 
-DRIVER_VERSION="{{ hostvars['localhost']['nvidia_driver_version'] | default('580.159.04') }}"
+DRIVER_VERSION_x86_64="{{ hostvars['localhost']['nvidia_driver_version_x86_64'] | default('580.159.04') }}"
+DRIVER_VERSION_aarch64="{{ hostvars['localhost']['nvidia_driver_version_aarch64'] | default('580.159.04') }}"
+
+ARCH=$(uname -m)
+if [ "$ARCH" == "aarch64" ]; then
+    DRIVER_VERSION="$DRIVER_VERSION_aarch64"
+else
+    DRIVER_VERSION="$DRIVER_VERSION_x86_64"
+fi
+
 LOGFILE="/var/log/nvidia_install.log"
 
 # ── Ensure full PATH (non-interactive shells may miss /usr/sbin) ──

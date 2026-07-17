@@ -139,7 +139,7 @@
 
 # nvidia_driver_version
 # NVIDIA GPU driver configuration for compute nodes
-# This driver version is used by install_cuda_driver.sh on slurm nodes
+# These driver versions are used by install_cuda_driver.sh on slurm nodes
 # Default: "580.159.04" if not specified
 # Common versions:
 #   - "580.159.04" for H100 GPUs
@@ -148,7 +148,8 @@
 
 slurm_cluster:
   - cluster_name: slurm_cluster
-    nvidia_driver_version: "580.159.04"
+    nvidia_driver_version_x86_64: "580.159.04"
+    nvidia_driver_version_aarch64: "580.159.04"
     nfs_storage_name: nfs_slurm
     vast_storage_name: vast_storage
 
