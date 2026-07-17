@@ -26,9 +26,3 @@ credential_files:
     file_mode: 600
     vault_path: "{{ input_project_dir }}/.build_stream_oauth_credentials_key"
     condition: "{{ enable_build_stream | default(false) | bool }}"
-  - credential_type: "Build Manager"
-    template: "{{ role_path }}/templates/build_manager_credential.j2"
-    file_path: "{{ input_project_dir }}/build_manager_credentials.yml"
-    file_mode: 600
-    vault_path: "{{ input_project_dir }}/.build_manager_credentials_key"
-    condition: true
