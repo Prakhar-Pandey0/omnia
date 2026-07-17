@@ -26,12 +26,8 @@
 - name: Import hosts task
   ansible.builtin.import_tasks: hosts.yml
 
-- name: Import minio task (MinIO backend only)
-  ansible.builtin.include_tasks: minio.yml
-  when: storage_backend == 'minio'
-
-- name: Import registry task
-  ansible.builtin.import_tasks: registry.yml
+# NOTE: minio and registry deployment moved to build_manager domain.
+# build_manager.yml → prepare_build_manager.yml deploys MinIO + Registry.
 
 - name: Import ochami task
   ansible.builtin.import_tasks: ochami.yml
@@ -44,9 +40,3 @@
 
 - name: Import regctl tasks
   ansible.builtin.import_tasks: regctl.yml
-
-- name: Import s3 bucket tasks
-  ansible.builtin.import_tasks: s3_bucket.yml
-
-- name: Import policy update tasks
-  ansible.builtin.include_tasks: policy_update.yml

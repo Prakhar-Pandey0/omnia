@@ -1,0 +1,22 @@
+# {{ ansible_managed }}
+[Unit]
+Description=MinIO S3 Object Storage
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+Image={{ minio_image }}
+ContainerName=minio
+PublishPort={{ minio_port }}:9000
+PublishPort={{ minio_console_port }}:9001
+Volume={{ minio_data_dir }}:/data:Z
+Environment=MINIO_ROOT_USER={{ minio_access_key }}
+Environment=MINIO_ROOT_PASSWORD={{ minio_secret_key }}
+Exec=server /data --console-address ":9001"
+
+[Service]
+Restart=always
+TimeoutStartSec=300
+
+[Install]
+WantedBy=multi-user.target default.target

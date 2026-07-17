@@ -1299,6 +1299,21 @@ post_setup_config() {
     cp -r /omnia/input/* /opt/omnia/input/project_default
     rm -rf /omnia/input
     rm -rf /omnia/omnia.sh"
+
+    # Copy build_manager input files to project_default/build_manager/ subdir
+    # NOTE: Credential files are NOT copied here — they are loaded dynamically
+    # by the credential utility at runtime.
+    echo -e "${BLUE} Copying build_manager input files to project_default/build_manager/.${NC}"
+    podman exec -u root omnia_core bash -c "
+    if [ -d /omnia/build_manager/input ]; then
+        mkdir -p /opt/omnia/input/project_default/build_manager
+        cp -r /omnia/build_manager/input/* /opt/omnia/input/project_default/build_manager/
+    fi"
+
+    # Create the output directory for project_default
+    echo -e "${GREEN} Creating the output directory.${NC}"
+    podman exec -u root omnia_core bash -c "
+    mkdir -p /opt/omnia/output/project_default"
 }
 
 validate_nfs_server() {

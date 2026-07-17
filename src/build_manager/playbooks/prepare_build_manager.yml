@@ -1,0 +1,67 @@
+# Copyright 2026 Dell Inc. or its subsidiaries. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+---
+# prepare_build_manager.yml — Deploy MinIO (S3) + local container registry.
+# Idempotent — safe to run multiple times.
+#
+# Standalone usage:
+#   cd src/build_manager/playbooks
+#   ansible-playbook prepare_build_manager.yml
+#
+# When run standalone, credentials and input dir are loaded here.
+# When imported from build_manager.yml, those steps run in the parent (tags: always).
+
+# Standalone: load credentials when not already available
+- name: Load credentials for prepare_build_manager (standalone)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tags: always
+  tasks:
+    - name: Check if credentials already loaded (from parent build_manager.yml)
+      ansible.builtin.set_fact:
+        _creds_loaded: "{{ s3_secret_key is defined }}"
+
+    - name: Load credential utility (standalone mode)
+      when: not _creds_loaded | bool
+      block:
+        - name: Include input project directory
+          ansible.builtin.include_vars:
+            file: "{{ input_project_dir | default('/opt/omnia/input/project_default') }}/omnia_config_credentials.yml"
+          no_log: true
+
+- name: Create oim group
+  ansible.builtin.import_playbook: ../../playbooks/utils/create_container_group.yml
+  vars:
+    oim_group: true
+  tags: always
+
+- name: Deploy MinIO and Registry on OIM
+  hosts: oim
+  connection: ssh
+  gather_facts: false
+  tasks:
+    - name: Deploy MinIO S3 storage
+      ansible.builtin.include_role:
+        name: deploy_minio
+      tags:
+        - deploy_minio
+        - prepare
+
+    - name: Deploy local container registry
+      ansible.builtin.include_role:
+        name: deploy_registry
+      tags:
+        - deploy_registry
+        - prepare

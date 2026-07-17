@@ -1,0 +1,72 @@
+# Copyright 2026 Dell Inc. or its subsidiaries. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+---
+# build_manager_config.yml — consolidated configuration for the build_manager domain.
+#
+# This file is the per-domain input configuration for build_manager.
+# It consolidates keys previously spread across storage_config.yml and
+# build_stream_config.yml.
+#
+# Location (NFS):
+#   /opt/omnia/input/project_default/build_manager/build_manager_config.yml
+#
+# Phase 1 Compatibility:
+#   If this file does not exist, build_manager.yml falls back to reading
+#   storage_config.yml + build_stream_config.yml from the project input dir.
+
+# ---------------------------------------------------------------------------
+# S3 Storage Backend
+# ---------------------------------------------------------------------------
+# S3 provider: "minio" (deployed by build_manager) or "powerscale" (external).
+# If using MinIO, endpoint_url is auto-detected from the deploy_minio role.
+# NOTE: S3 bucket names are FIXED constants — do NOT change them:
+#   boot-images  — OS boot images (kernel, initramfs, rootfs)
+#   efi-images   — EFI boot artifacts
+s3_configurations:
+  provider: "minio"          # minio | powerscale
+
+# ---------------------------------------------------------------------------
+# Repo Manager Output (upstream dependency)
+# ---------------------------------------------------------------------------
+# build_manager reads the repo_manager output file to obtain Pulp RPM repo URLs,
+# certificate paths, and content base URLs. Run repo_manager before build_manager.
+#
+# Expected output location: {{ output_project_dir }}/repo_manager/repo_status.yml
+# (output_project_dir is set by include_input_dir utility, defaults to /opt/omnia/output/project_default)
+#
+# The repo_status.yml provides:
+#   - rpm_repos.x86_64.baseos, appstream, codeready_builder, epel, ...
+#   - rpm_repos.aarch64.baseos, appstream, codeready_builder, epel, ...
+#
+# build_manager pre-check validates this file exists and overall_status == 'synced'.
+# repo_manager_output: "{{ output_project_dir }}/repo_manager/repo_status.yml"
+
+# ---------------------------------------------------------------------------
+# ARM Build Host (aarch64)
+# ---------------------------------------------------------------------------
+# IP address of the ARM admin node for aarch64 image builds.
+# Leave empty to skip aarch64 builds entirely.
+# This IP is validated (reachability, SSH, architecture check) before use.
+aarch64_inventory_host_ip: ""
+
+# SSH user for connecting to the ARM build host (default: root)
+aarch64_ssh_user: "root"
+
+# ---------------------------------------------------------------------------
+# Build Image Settings
+# ---------------------------------------------------------------------------
+build_image:
+  job_async: 7200            # Max async wait for image build (seconds)
+  job_retry: 240             # Max retries for async status check
+  job_delay: 30              # Delay between async status checks (seconds)

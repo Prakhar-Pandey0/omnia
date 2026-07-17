@@ -1,0 +1,84 @@
+# Copyright 2026 Dell Inc. or its subsidiaries. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+---
+# ============================================================================
+# SAMPLE: build_status.yml — build_manager output contract
+# ============================================================================
+# Location (NFS):
+#   /opt/omnia/output/project_default/build_status.yml          (latest)
+#   /opt/omnia/output/project_default/build_manager/
+#     build_status_2.3.0.0_20260717_1030.yml                    (versioned)
+#
+# Consumed by:
+#   - provision domain (BSS template rendering)
+#   - provision/roles/provision_validations/tasks/validate_image.yml
+#   - provision/roles/configure_ochami/tasks/configure_bss_group.yml
+# ============================================================================
+
+overall_status: "completed"
+
+s3_endpoint_url: "http://oim.example.com:9000"
+s3_bucket: "boot-images"
+
+build_arch_list:
+  - "x86_64"
+  - "aarch64"
+
+functional_group_images:
+  # --- x86_64 functional groups ---
+  - functional_group: "compute_x86_64"
+    arch: "x86_64"
+    os: "rhel"
+    os_version: "10.0"
+    kernel: "boot-images/compute_x86_64/rhel-compute_x86_64_omnia_2.3.0.0/vmlinuz-5.14.0-427.42.1.el10_0.x86_64"
+    initrd: "boot-images/compute_x86_64/rhel-compute_x86_64_omnia_2.3.0.0/initramfs-5.14.0-427.42.1.el10_0.x86_64.img"
+    rootfs: "boot-images/compute_x86_64/rhel-compute_x86_64_omnia_2.3.0.0/rootfs-compute_x86_64.squashfs"
+    status: "success"
+
+  - functional_group: "service_kube_control_plane_first_x86_64"
+    arch: "x86_64"
+    os: "rhel"
+    os_version: "10.0"
+    kernel: "boot-images/service_kube_control_plane_first_x86_64/rhel-service_kube_control_plane_first_x86_64_omnia_2.3.0.0_k8s_1.35.1/vmlinuz-5.14.0-427.42.1.el10_0.x86_64"
+    initrd: "boot-images/service_kube_control_plane_first_x86_64/rhel-service_kube_control_plane_first_x86_64_omnia_2.3.0.0_k8s_1.35.1/initramfs-5.14.0-427.42.1.el10_0.x86_64.img"
+    rootfs: "boot-images/service_kube_control_plane_first_x86_64/rhel-service_kube_control_plane_first_x86_64_omnia_2.3.0.0_k8s_1.35.1/rootfs-service_kube_control_plane_first_x86_64.squashfs"
+    status: "success"
+
+  - functional_group: "service_kube_worker_x86_64"
+    arch: "x86_64"
+    os: "rhel"
+    os_version: "10.0"
+    kernel: "boot-images/service_kube_worker_x86_64/rhel-service_kube_worker_x86_64_omnia_2.3.0.0_k8s_1.35.1/vmlinuz-5.14.0-427.42.1.el10_0.x86_64"
+    initrd: "boot-images/service_kube_worker_x86_64/rhel-service_kube_worker_x86_64_omnia_2.3.0.0_k8s_1.35.1/initramfs-5.14.0-427.42.1.el10_0.x86_64.img"
+    rootfs: "boot-images/service_kube_worker_x86_64/rhel-service_kube_worker_x86_64_omnia_2.3.0.0_k8s_1.35.1/rootfs-service_kube_worker_x86_64.squashfs"
+    status: "success"
+
+  - functional_group: "login_x86_64"
+    arch: "x86_64"
+    os: "rhel"
+    os_version: "10.0"
+    kernel: "boot-images/login_x86_64/rhel-login_x86_64_omnia_2.3.0.0/vmlinuz-5.14.0-427.42.1.el10_0.x86_64"
+    initrd: "boot-images/login_x86_64/rhel-login_x86_64_omnia_2.3.0.0/initramfs-5.14.0-427.42.1.el10_0.x86_64.img"
+    rootfs: "boot-images/login_x86_64/rhel-login_x86_64_omnia_2.3.0.0/rootfs-login_x86_64.squashfs"
+    status: "success"
+
+  # --- aarch64 functional groups ---
+  - functional_group: "compute_aarch64"
+    arch: "aarch64"
+    os: "rhel"
+    os_version: "10.0"
+    kernel: "boot-images/compute_aarch64/rhel-compute_aarch64_omnia_2.3.0.0/vmlinuz-5.14.0-427.42.1.el10_0.aarch64"
+    initrd: "boot-images/compute_aarch64/rhel-compute_aarch64_omnia_2.3.0.0/initramfs-5.14.0-427.42.1.el10_0.aarch64.img"
+    rootfs: "boot-images/compute_aarch64/rhel-compute_aarch64_omnia_2.3.0.0/rootfs-compute_aarch64.squashfs"
+    status: "success"
