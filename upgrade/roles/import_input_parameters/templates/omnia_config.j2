@@ -138,13 +138,15 @@
 #   slurmdbd: /opt/omnia/input/project_default/slurmdbd.conf
 
 # nvidia_driver_version
-# NVIDIA GPU driver configuration for compute nodes
-# These driver versions are used by install_cuda_driver.sh on slurm nodes
-# Default: "580.159.04" if not specified
-# Common versions:
-#   - "580.159.04" for H100 GPUs
-#   - "550.90.07" for A100 GPUs
-#   - "535.129.02" for V100 GPUs
+# NVIDIA CUDA driver version to install on compute nodes.
+# These driver versions are used by install_cuda_driver.sh on Slurm nodes.
+# Two versions can be specified per cluster:
+#   - nvidia_driver_version_x86_64: driver version for x86_64 compute nodes
+#   - nvidia_driver_version_aarch64: driver version for aarch64 compute nodes
+# Default: "580.159.04" if not specified.
+# 580.159.04 is the NVIDIA CUDA driver version.
+# This version was validated on x86_64 and aarch64 compute nodes
+# running RHEL 10.0.
 
 slurm_cluster:
 {% set _slurm_cluster = omnia_slurm_cluster | default([], true) %}
