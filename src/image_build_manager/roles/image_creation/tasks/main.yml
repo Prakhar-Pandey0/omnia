@@ -23,7 +23,7 @@
   no_log: true
 
 - name: Include global variables from common folder
-  ansible.builtin.include_vars: "{{ role_path }}/../../../common/vars/openchami_image_cmd.yml"
+  ansible.builtin.include_vars: "{{ role_path }}/../../vars/openchami_image_cmd.yml"
   register: ochami_image_global_vars
 
 - name: Build image common tasks for {{ build_arch }}

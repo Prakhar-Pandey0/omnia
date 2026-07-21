@@ -22,7 +22,7 @@
 # Copy pulp certificate and update CA trust
 - name: Copy pulp webserver certificate to anchors
   ansible.builtin.copy:
-    src: "{{ pulp_webserver_cert_path }}"
+    src: "{{ pulp_cert_host_path }}"
     dest: "{{ anchors_path }}"
     mode: "{{ dir_permissions_644 }}"
     remote_src: true

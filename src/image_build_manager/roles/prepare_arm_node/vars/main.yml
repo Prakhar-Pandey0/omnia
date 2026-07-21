@@ -21,7 +21,7 @@ pull_image_retries: "5"
 pull_image_delay: "10"
 ochami_aarch_64_dir: "/opt/omnia/openchami/aarch64"
 pulp_repo_file_path: "/etc/yum.repos.d/pulp.repo"
-pulp_webserver_cert_path: "{{ hostvars['localhost']['pulp_webserver_cert_path'] }}"
+pulp_cert_host_path: "{{ hostvars['localhost']['pulp_cert_oim_path'] | default('/opt/omnia/pulp/settings/certs/pulp_webserver.crt') }}"
 anchors_path: "/etc/pki/ca-trust/source/anchors/pulp_webserver.crt"
 regctl_bin_path: "/usr/local/bin/regctl"
 

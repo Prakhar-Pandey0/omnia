@@ -23,3 +23,7 @@ registry_port: 5000
 registry_storage_dir: "/opt/omnia/registry/data"
 registry_image: "docker.io/library/registry:2"
 registry_tag: "2"
+
+# Retry and delay settings
+max_retries: 10
+delay_count: 5

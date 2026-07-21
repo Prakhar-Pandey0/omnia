@@ -36,12 +36,12 @@
       functional_group_parser:
         functional_groups_file: "{{ functional_groups_file_path }}"
       register: functional_group_parser_list
-      when: not enable_build_stream
+      when: not (enable_build_stream | default(false) | bool)
 
     - name: Set fact for functional_group_list
       ansible.builtin.set_fact:
         functional_group_list: "{{ functional_group_parser_list.functional_groups }}"
-      when: not enable_build_stream
+      when: not (enable_build_stream | default(false) | bool)
 
     - name: Debug full functional group parser output
       ansible.builtin.debug:
