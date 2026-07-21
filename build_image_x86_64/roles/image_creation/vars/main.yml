@@ -65,12 +65,15 @@ storage_config_syntax_fail_msg: "Failed to load storage_config.yml due to syntax
 # preflight_selinux_check.yml
 selinux_module_name: "omnia-crun-bpf"
 selinux_policy_dir: "/etc/selinux/targeted/custom"
+selinux_tools_fail_msg: >-
+  Required SELinux policy build tools (policycoreutils, checkpolicy) are not installed.
+  Please run prepare_oim/prepare_oim.yml to install the required packages.
 podman_verify_fail_msg: >-
   Podman cannot start containers on this node.
   Ensure the node was rebooted after the kernel update and that the
   omnia-crun-bpf SELinux module loaded successfully
   (semodule -lfull | grep omnia-crun-bpf).
-selinux_install_warn_msg: >-
-  WARNING: Failed to install omnia-crun-bpf SELinux policy module.
+selinux_verify_warn_msg: >-
+  WARNING: Failed to verify or load omnia-crun-bpf SELinux policy module.
   Build will continue but may fail if the eBPF device filter issue is present.
   Check SELinux policy tools and audit log on this node.
