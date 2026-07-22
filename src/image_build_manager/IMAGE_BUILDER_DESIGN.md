@@ -427,84 +427,13 @@ functional_group_images:
 
 ---
 
-## 9. Upgrade & Rollback
-
-- **Upgrade**: S3 creds in old `omnia_config_credentials.yml` are automatically migrated
-  to `image_build_credentials.yml`.
-- **Rollback**: Falls back to reading S3 from old credential file if
-  `image_build_credentials.yml` doesn't exist yet.
-- **prepare_oim** no longer prompts for S3 creds.
-
----
-
-## 10. Backward Compatibility
+## 9. Backward Compatibility
 
 - No breaking changes for users who don't use image_build_manager.
 - `image_build_config.yml` is **required** — no legacy fallback.
 - Sub-playbooks work independently with standalone setup guards.
 - Container build is self-contained in `src/image_build_manager/containers/`.
-- All `ibm_` prefixed names removed — replaced with `image_build_` prefix.
 
----
-
-## 11. PR Description
-
-### Image Build Manager — Self-Contained Domain Refactoring
-
-#### Summary
-
-Complete refactoring of the `image_build_manager` domain to be **fully self-contained**
-with zero external dependencies on `src/common/` or `src/playbooks/utils/`. The domain
-owns its own library (modules + module_utils), callback plugins, validation framework,
-credential management, and cleanup lifecycle.
-
-#### Key Changes
-
-**Domain Library & Validation Framework**
-- Created `library/modules/` with 5 domain-specific Ansible modules:
-  `base_image_package_collector.py`, `image_package_collector.py`,
-  `functional_group_parser.py`, `generate_functional_groups.py`,
-  `validate_image_build_config.py`
-- Created `library/module_utils/build_image/` (local copy of shared utilities)
-- Created `library/module_utils/image_build_validation/` with L1 schema + L2 logic
-- Added 3 JSON schemas: `image_build_config.json`, `image_build_credentials.json`,
-  `functional_groups_config.json`
-- Fixed vault-encrypted credential file detection (`$ANSIBLE_VAULT` header skip)
-
-**Self-Contained Roles (replaces all utility imports)**
-- `image_build_setup` — replaces `upgrade_checkup.yml` + `include_input_dir.yml` + `create_container_group.yml`
-- `image_build_credentials` — replaces `credential_utility` roles
-- `validate_image_build_input` — replaces central `validate_config.yml`
-- `image_build_functional_groups` — replaces `generate_functional_groups.yml`
-- `cleanup_image_build_manager` — full cleanup (MinIO, registry, creds, artifacts)
-
-**Callback Plugin**
-- Copied `omnia_default.py` callback plugin locally into `callback_plugins/`
-- Removed all `../common/callback_plugins` references from `ansible.cfg`
-
-**ansible.cfg — Zero External References**
-- `library = library/modules` (was `library/modules:../common/library/modules`)
-- `module_utils = library/module_utils` (was `library/module_utils:../common/library/module_utils`)
-- `callback_plugins = callback_plugins` (was `../common/callback_plugins`)
-- `roles_path = roles` (was `roles:../playbooks/input_validation/roles`)
-
-**Playbook Refactoring**
-- Removed duplicate metadata `include_vars` from `image_creation/tasks/main.yml` (already in `image_build_setup`)
-- Moved SELinux preflight (policycoreutils + checkpolicy) from build playbooks to `prepare_image_build_manager.yml`
-- All sub-playbooks have standalone setup guards (`image_build_setup_done` check)
-- Tag-based orchestration: `prepare`, `build`, `validate`, `cleanup`, `upgrade`, `rollback`
-
-**Documentation**
-- Renamed `REFACTORING_SUMMARY.md` → `IMAGE_BUILDER_DESIGN.md`
-- Full design doc with validation HLD, credential HLD, self-containment plan
-- `INPUT_CONTRACT.md`, `OUTPUT_CONTRACT.md`, `IMAGE_BUILD_MIGRATION_PLAN.md`
-
-#### Files Changed
-
-- **70+ files** changed across `src/image_build_manager/`
-- 13 new roles, 8 new playbooks, 5 domain-specific Python modules
-- 3 JSON schemas, 1 callback plugin (local copy)
-- Zero `../common/` or `../../playbooks/utils/` references remaining
 
 #### Testing
 
@@ -519,5 +448,6 @@ ansible-playbook image_build_manager.yml
 # Tag-specific runs
 ansible-playbook image_build_manager.yml --tags validate
 ansible-playbook image_build_manager.yml --tags prepare
+ansible-playbook image_build_manager.yml --tags build
 ansible-playbook image_build_manager.yml --tags cleanup
 ```
