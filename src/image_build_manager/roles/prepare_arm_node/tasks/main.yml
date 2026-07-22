@@ -125,7 +125,7 @@
 
 - name: Copy pulp webserver certificate to target host
   ansible.builtin.copy:
-    src: "{{ pulp_webserver_cert_path }}"
+    src: "{{ pulp_cert_host_path }}"
     dest: "{{ anchors_path }}"
     mode: "{{ hostvars['localhost']['file_permissions_644'] }}"
   become: true
