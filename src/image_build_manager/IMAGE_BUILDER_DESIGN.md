@@ -1,6 +1,5 @@
 # Image Build Manager — Design & Architecture
 
-> **Last Updated**: Jul 22, 2026 | **Branch**: `pub/q3_main`
 
 ---
 
@@ -109,7 +108,7 @@ All paths are fully local — **zero references to `../common/`**.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                         IMAGE BUILD MANAGER — EXECUTION FLOW                         │
+│                         IMAGE BUILD MANAGER — EXECUTION FLOW                        │
 └─────────────────────────────────────────────────────────────────────────────────────┘
 
   ┌──────────┐      ┌──────────┐      ┌──────────┐      ┌──────────┐      ┌──────────┐
@@ -130,11 +129,11 @@ All paths are fully local — **zero references to `../common/`**.
        │                 │ └─────────────────────────────┘   │                 │
        │                 │                 │                 │                 │
        │  Step 1: Validate                 │                 │                 │
-       │────────────────────────────────>│                 │                 │
+       │──────────────────────────────────>│                 │                 │
        │                 │                 │ ┌─────────────────────────────┐   │
-       │                 │                 │ │ L1: JSON schema check      │   │
-       │                 │                 │ │ L2: Cross-field logic      │   │
-       │                 │                 │ │ Vault detection (skip enc) │   │
+       │                 │                 │ │ L1: JSON schema check       │   │
+       │                 │                 │ │ L2: Cross-field logic       │   │
+       │                 │                 │ │ Vault detection (skip enc)  │   │
        │                 │                 │ └─────────────────────────────┘   │
        │                 │                 │                 │                 │
        │  Step 2: Credentials              │                 │                 │
@@ -147,7 +146,7 @@ All paths are fully local — **zero references to `../common/`**.
        │────────────────────────────────────────────────────>│                 │
        │                 │                 │                 │                 │
        │  Step 5-7: Build x86_64 + aarch64 + write status    │                 │
-       │────────────────────────────────────────────────────────────────────>│
+       │──────────────────────────────────────────────────────────────────────>│
        │                 │                 │                 │                 │
   ┌────┴─────┐      ┌────┴─────┐      ┌────┴─────┐      ┌────┴─────┐      ┌────┴─────┐
   │  User /  │      │  Setup   │      │ Validate │      │ Prepare  │      │  Build   │
@@ -193,26 +192,26 @@ The image_build_manager uses a **two-tier validation architecture**:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│               validate_image_build_input role            │
+│               validate_image_build_input role           │
 │   (roles/validate_image_build_input/tasks/main.yml)     │
 └───────────────────────┬─────────────────────────────────┘
                         │ calls
                         ▼
 ┌─────────────────────────────────────────────────────────┐
-│         validate_image_build_config module               │
+│         validate_image_build_config module              │
 │   (library/modules/validate_image_build_config.py)      │
 ├─────────────────────────────────────────────────────────┤
-│  L1: JSON Schema Validation                              │
-│    ├── image_build_config.json                           │
-│    ├── image_build_credentials.json                      │
-│    └── functional_groups_config.json                     │
-│  L2: Cross-Field Logic Validation                        │
-│    ├── S3 provider ↔ endpoint_url consistency            │
-│    ├── aarch64 host IP ↔ ssh_user dependency             │
-│    ├── job_async ≥ job_retry × job_delay                 │
-│    └── powerscale → s3_access_id required                │
-│  Vault Detection                                         │
-│    └── Skip encrypted files (detect $ANSIBLE_VAULT)      │
+│  L1: JSON Schema Validation                             │
+│    ├── image_build_config.json                          │
+│    ├── image_build_credentials.json                     │
+│    └── functional_groups_config.json                    │
+│  L2: Cross-Field Logic Validation                       │
+│    ├── S3 provider ↔ endpoint_url consistency           │
+│    ├── aarch64 host IP ↔ ssh_user dependency            │
+│    ├── job_async ≥ job_retry × job_delay                │
+│    └── powerscale → s3_access_id required               │
+│  Vault Detection                                        │
+│    └── Skip encrypted files (detect $ANSIBLE_VAULT)     │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -285,16 +284,16 @@ Other domains can adopt this pattern:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│           image_build_credentials role                   │
+│           image_build_credentials role                  │
 │   (roles/image_build_credentials/tasks/main.yml)        │
 ├─────────────────────────────────────────────────────────┤
-│  Step 1: Resolve credential file path                    │
-│  Step 2: Check if credential file exists                 │
-│  Step 3: Create from template if missing                 │
-│  Step 4: Decrypt vault (if encrypted)                    │
-│  Step 5: Prompt mandatory fields (s3_secret_key, etc.)   │
-│  Step 6: Prompt conditional fields (s3_access_id)        │
-│  Step 7: Re-encrypt with Ansible Vault                   │
+│  Step 1: Resolve credential file path                   │
+│  Step 2: Check if credential file exists                │
+│  Step 3: Create from template if missing                │
+│  Step 4: Decrypt vault (if encrypted)                   │
+│  Step 5: Prompt mandatory fields (s3_secret_key, etc.)  │
+│  Step 6: Prompt conditional fields (s3_access_id)       │
+│  Step 7: Re-encrypt with Ansible Vault                  │
 └─────────────────────────────────────────────────────────┘
 ```
 
